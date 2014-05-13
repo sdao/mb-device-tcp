@@ -37,14 +37,6 @@ namespace MotionBuilderServer
             }
         }
 
-        public bool IsStreaming
-        {
-            get
-            {
-                return streaming;
-            }
-        }
-
         public void Accept()
         {
             Console.WriteLine("Waiting for MotionBuilder...");
@@ -53,7 +45,6 @@ namespace MotionBuilderServer
             {
                 s = new NetworkStream(sock);
             }
-            Streamer stream = null;
 
             Console.WriteLine("Connected to MotionBuilder.");
 
@@ -75,30 +66,33 @@ namespace MotionBuilderServer
                     {
                         case ORProtocol.BYTE_STREAM_STOP:
                             Console.WriteLine("Client requested stream stop.");
-                            if (stream != null)
+                            lock (streamLock)
                             {
-                                streaming = false;
-                                //stream.Stop();
-                                Console.WriteLine("--> Stream stopped.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("--> Stream already stopped.");
+                                if (streaming)
+                                {
+                                    streaming = false;
+                                    Console.WriteLine("--> Stream stopped.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("--> Stream already stopped.");
+                                }
                             }
                             break;
 
                         case ORProtocol.BYTE_STREAM_START:
                             Console.WriteLine("Client requested stream start.");
-                            if (stream == null || !stream.Running)
+                            lock (streamLock)
                             {
-                                streaming = true;
-                                stream = new Streamer(s);
-                                //stream.Start();
-                                Console.WriteLine("--> Stream started.");
-                            }
-                            else
-                            {
-                                Console.WriteLine("--> Stream already started.");
+                                if (!streaming)
+                                {
+                                    streaming = true;
+                                    Console.WriteLine("--> Stream started.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("--> Stream already started.");
+                                }
                             }
                             break;
 

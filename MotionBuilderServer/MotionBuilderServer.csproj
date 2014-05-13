@@ -47,7 +47,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ORSession.cs" />
     <Compile Include="SessionsState.cs" />
-    <Compile Include="Streamer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
