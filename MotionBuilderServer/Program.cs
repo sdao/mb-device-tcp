@@ -11,24 +11,47 @@ namespace MotionBuilderServer
 {
     class Program
     {
+        private static SessionsState sessions = new SessionsState();
+
         static void Main(string[] args)
         {
-            TcpListener listener = new TcpListener(IPAddress.Loopback, 3001);
-            listener.Start();
+            TcpListener orClientListener = new TcpListener(IPAddress.Any, 3001);
+            orClientListener.Start();
+
+            TcpListener phoneListener = new TcpListener(IPAddress.Any, 3002);
+            phoneListener.Start();
 
             Console.WriteLine("Server online.");
 
-            while (true)
-            {
-                Session session = new Session(listener);
-                session.Accept();
+            OpenRealityLoop(orClientListener);
+            PhoneLoop(phoneListener);
 
-                Console.WriteLine("Press any key to re-connect, or 'q' to quit.");
-                if (Console.ReadKey(true).Key == ConsoleKey.Q)
+            SemaphoreSlim sema = new SemaphoreSlim(0);
+            sema.Wait();
+        }
+
+        static async void OpenRealityLoop(TcpListener orClientListener)
+        {
+            await Task.Run(() =>
                 {
-                    break;
-                }
-            }
+                    while (true)
+                    {
+                        sessions.currentOrSession = new ORSession(orClientListener);
+                        sessions.currentOrSession.Accept();
+                    }
+                });
+        }
+
+        static async void PhoneLoop(TcpListener phoneListener)
+        {
+            await Task.Run(() =>
+                {
+                    while (true)
+                    {
+                        sessions.currentPhoneSession = new PhoneDeviceSession(phoneListener, sessions);
+                        sessions.currentPhoneSession.Accept();
+                    }
+                });
         }
     }
 }

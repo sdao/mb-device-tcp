@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OpenRealityProtocol.cs" />
+    <Compile Include="ORProtocol.cs" />
+    <Compile Include="PhoneDeviceSession.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Session.cs" />
+    <Compile Include="ORSession.cs" />
+    <Compile Include="SessionsState.cs" />
     <Compile Include="Streamer.cs" />
   </ItemGroup>
   <ItemGroup>

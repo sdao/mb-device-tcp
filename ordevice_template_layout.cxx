@@ -292,33 +292,33 @@ void ORDevice_Template_Layout::UICreateLayout1()
 													lS_y,	kFBAttachTop,		"LayoutRegionSimulator",	1.00,
 													lWrb3,	kFBAttachNone,		NULL,					1.00,
 													lH,		kFBAttachNone,		NULL,					1.00 );
-	mLayoutCommunication.AddRegion( "LabelSimulatorFrequency",			"LabelSimulatorFrequency",
+	mLayoutCommunication.AddRegion( "LabelSimulatorXSpeed",			"LabelSimulatorXSpeed",
 													lSlbx,	kFBAttachLeft,		"LayoutRegionSimulator",	1.00,
 													lSlby,	kFBAttachTop,		"LayoutRegionSimulator",	1.00,
 													lWlb,	kFBAttachNone,		NULL,					1.00,
 													lH,		kFBAttachNone,		NULL,					1.00 );
-	mLayoutCommunication.AddRegion( "EditNumberSimulatorFrequency",		"EditNumberSimulatorFrequency",
-													lS,		kFBAttachRight,		"LabelSimulatorFrequency",		1.00,
-													0,		kFBAttachTop,		"LabelSimulatorFrequency",		1.00,
+	mLayoutCommunication.AddRegion( "EditNumberSimulatorXSpeed",	"EditNumberSimulatorXSpeed",
+													lS,		kFBAttachRight,		"LabelSimulatorXSpeed",		1.00,
+													0,		kFBAttachTop,		"LabelSimulatorXSpeed",		1.00,
 													lW,		kFBAttachNone,		NULL,					1.00,
 													lH,		kFBAttachNone,		NULL,					1.00 );
-	mLayoutCommunication.AddRegion( "LabelSimulatorAmplitude",			"LabelSimulatorAmplitude",
-													0,		kFBAttachLeft,		"LabelSimulatorFrequency",		1.00,
-													lS,		kFBAttachBottom,	"LabelSimulatorFrequency",		1.00,
-													0,		kFBAttachWidth,		"LabelSimulatorFrequency",		1.00,
-													0,		kFBAttachHeight,	"LabelSimulatorFrequency",		1.00 );
-	mLayoutCommunication.AddRegion( "EditNumberSimulatorAmplitude",		"EditNumberSimulatorAmplitude",
-													lS,		kFBAttachRight,		"LabelSimulatorAmplitude",	1.00,
-													0,		kFBAttachTop,		"LabelSimulatorAmplitude",	1.00,
-													0,		kFBAttachWidth,		"EditNumberSimulatorFrequency",		1.00,
-													0,		kFBAttachHeight,	"LabelSimulatorAmplitude",	1.00 );
+	mLayoutCommunication.AddRegion( "LabelSimulatorYSpeed",			"LabelSimulatorYSpeed",
+													0,		kFBAttachLeft,		"LabelSimulatorXSpeed",		1.00,
+													lS,		kFBAttachBottom,	"LabelSimulatorXSpeed",		1.00,
+													0,		kFBAttachWidth,		"LabelSimulatorXSpeed",		1.00,
+													0,		kFBAttachHeight,	"LabelSimulatorXSpeed",		1.00 );
+	mLayoutCommunication.AddRegion( "EditNumberSimulatorYSpeed",	"EditNumberSimulatorYSpeed",
+													lS,		kFBAttachRight,		"LabelSimulatorYSpeed",	1.00,
+													0,		kFBAttachTop,		"LabelSimulatorYSpeed",	1.00,
+													0,		kFBAttachWidth,		"EditNumberSimulatorXSpeed",		1.00,
+													0,		kFBAttachHeight,	"LabelSimulatorYSpeed",	1.00 );
 
 	// Assign regions (Simulator)
 	mLayoutCommunication.SetControl( "ButtonSimulatorEnable",		mButtonSimulatorEnable		);
-	mLayoutCommunication.SetControl( "LabelSimulatorFrequency",		mLabelSimulatorFrequency		);
-	mLayoutCommunication.SetControl( "EditNumberSimulatorFrequency",mEditNumberSimulatorFrequency			);
-	mLayoutCommunication.SetControl( "LabelSimulatorAmplitude",		mLabelSimulatorAmplitude	);
-	mLayoutCommunication.SetControl( "EditNumberSimulatorAmplitude",mEditNumberSimulatorAmplitude		);
+	mLayoutCommunication.SetControl( "LabelSimulatorXSpeed",		mLabelSimulatorXSpeed		);
+	mLayoutCommunication.SetControl( "EditNumberSimulatorXSpeed",	mEditNumberSimulatorXSpeed	);
+	mLayoutCommunication.SetControl( "LabelSimulatorYSpeed",		mLabelSimulatorYSpeed		);
+	mLayoutCommunication.SetControl( "EditNumberSimulatorYSpeed",	mEditNumberSimulatorYSpeed	);
 }
 
 
@@ -421,23 +421,23 @@ void ORDevice_Template_Layout::UIConfigureLayout1()
 	mButtonSimulatorEnable.State		= 0;
 	mButtonSimulatorEnable.OnClick.Add( this, (FBCallback) &ORDevice_Template_Layout::EventButtonSimulatorEnableClick );
 
-	mLabelSimulatorFrequency.Caption		= "Frequency :";
-	mEditNumberSimulatorFrequency.Value		= 1.0;
-	mEditNumberSimulatorFrequency.Precision	= 3.3;
-	mEditNumberSimulatorFrequency.Min		= 0.0;
-	mEditNumberSimulatorFrequency.Max		= 10.0;
-	mEditNumberSimulatorFrequency.SmallStep = 0.001;
-	mEditNumberSimulatorFrequency.LargeStep	= 0.010;
-	mEditNumberSimulatorFrequency.OnChange.Add( this, (FBCallback) &ORDevice_Template_Layout::EventEditNumberSimulatorFrequencyChange );
+	mLabelSimulatorXSpeed.Caption			= "X Speed :";
+	mEditNumberSimulatorXSpeed.Value		= 60.0;
+	mEditNumberSimulatorXSpeed.Precision	= 3.3;
+	mEditNumberSimulatorXSpeed.Min			= 0.0;
+	mEditNumberSimulatorXSpeed.Max			= 100.0;
+	mEditNumberSimulatorXSpeed.SmallStep	= 0.01;
+	mEditNumberSimulatorXSpeed.LargeStep	= 0.10;
+	mEditNumberSimulatorXSpeed.OnChange.Add( this, (FBCallback) &ORDevice_Template_Layout::EventEditNumberSimulatorXSpeedChange );
 
-	mLabelSimulatorAmplitude.Caption		= "Amplitude :";
-	mEditNumberSimulatorAmplitude.Value		= 1.0;
-	mEditNumberSimulatorAmplitude.Precision	= 3.3;
-	mEditNumberSimulatorAmplitude.Min		= 0.0;
-	mEditNumberSimulatorAmplitude.Max		= 10.0;
-	mEditNumberSimulatorAmplitude.SmallStep = 0.001;
-	mEditNumberSimulatorAmplitude.LargeStep	= 0.010;
-	mEditNumberSimulatorAmplitude.OnChange.Add( this, (FBCallback) &ORDevice_Template_Layout::EventEditNumberSimulatorAmplitudeChange );
+	mLabelSimulatorYSpeed.Caption			= "Y Speed :";
+	mEditNumberSimulatorYSpeed.Value		= 30.0;
+	mEditNumberSimulatorYSpeed.Precision	= 3.3;
+	mEditNumberSimulatorYSpeed.Min			= 0.0;
+	mEditNumberSimulatorYSpeed.Max			= 100.0;
+	mEditNumberSimulatorYSpeed.SmallStep	= 0.01;
+	mEditNumberSimulatorYSpeed.LargeStep	= 0.10;
+	mEditNumberSimulatorYSpeed.OnChange.Add( this, (FBCallback) &ORDevice_Template_Layout::EventEditNumberSimulatorYSpeedChange );
 
 	SelectCommunicationType( kFBCommTypeSerial );
 }
@@ -467,8 +467,8 @@ void ORDevice_Template_Layout::UIReset()
 	mEditNetworkAddress.Text			= mDevice->GetNetworkAddress();
 	mEditNetworkPort.Text				= lBuffer;
 	mListNetworkProtocol.ItemIndex		= (mDevice->GetCommunicationType() == kFBCommTypeNetworkUDP) ? 1:0;
-	mEditNumberSimulatorFrequency.Value = mDevice->GetFrequency();
-	mEditNumberSimulatorAmplitude.Value = mDevice->GetAmplitude();
+	mEditNumberSimulatorXSpeed.Value	= mDevice->GetXSpeed();
+	mEditNumberSimulatorYSpeed.Value	= mDevice->GetYSpeed();
 
 	mEditNumberSamplingRate.Value		= 1.0/((FBTime)mDevice->SamplingPeriod).GetSecondDouble();
 
@@ -609,20 +609,20 @@ void ORDevice_Template_Layout::EventButtonSimulatorEnableClick( HISender pSender
 /************************************************
  *	Simulator frequency change callback.
  ************************************************/
-void ORDevice_Template_Layout::EventEditNumberSimulatorFrequencyChange( HISender pSender, HKEvent pEvent )
+void ORDevice_Template_Layout::EventEditNumberSimulatorXSpeedChange( HISender pSender, HKEvent pEvent )
 {
-	mDevice->SetFrequency( mEditNumberSimulatorFrequency.Value );
-	mEditNumberSimulatorFrequency.Value = mDevice->GetFrequency();
+	mDevice->SetXSpeed( mEditNumberSimulatorXSpeed.Value );
+	mEditNumberSimulatorXSpeed.Value = mDevice->GetXSpeed();
 }
 
 
 /************************************************
  *	Simulator amplitude change callback.
  ************************************************/
-void ORDevice_Template_Layout::EventEditNumberSimulatorAmplitudeChange( HISender pSender, HKEvent pEvent )
+void ORDevice_Template_Layout::EventEditNumberSimulatorYSpeedChange( HISender pSender, HKEvent pEvent )
 {
-	mDevice->SetAmplitude( mEditNumberSimulatorAmplitude.Value );
-	mEditNumberSimulatorAmplitude.Value = mDevice->GetAmplitude();
+	mDevice->SetYSpeed( mEditNumberSimulatorYSpeed.Value );
+	mEditNumberSimulatorYSpeed.Value = mDevice->GetYSpeed();
 }
 
 
@@ -695,10 +695,10 @@ void ORDevice_Template_Layout::SelectCommunicationType( int pType )
 	mListNetworkProtocol.Enabled			= false;
 
 	mButtonSimulatorEnable.State			= lSimulatorTrue ? 1 : 0;
-	mLabelSimulatorFrequency.Enabled		= lSimulatorTrue;
-	mEditNumberSimulatorFrequency.Enabled	= lSimulatorTrue;
-	mLabelSimulatorAmplitude.Enabled		= lSimulatorTrue;
-	mEditNumberSimulatorAmplitude.Enabled	= lSimulatorTrue;
+	mLabelSimulatorXSpeed.Enabled			= lSimulatorTrue;
+	mEditNumberSimulatorXSpeed.Enabled		= lSimulatorTrue;
+	mLabelSimulatorYSpeed.Enabled			= lSimulatorTrue;
+	mEditNumberSimulatorYSpeed.Enabled		= lSimulatorTrue;
 }
 
 void ORDevice_Template_Layout::EventEditNumberSamplingRateChange( HISender pSender, HKEvent pEvent )

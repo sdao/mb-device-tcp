@@ -89,8 +89,8 @@ public:
 	void	EventEditNetworkPortChange				( HISender pSender, HKEvent pEvent );
 	void	EventListNetworkProtocolChange			( HISender pSender, HKEvent pEvent );
 	void	EventButtonSimulatorEnableClick			( HISender pSender, HKEvent pEvent );
-	void	EventEditNumberSimulatorFrequencyChange	( HISender pSender, HKEvent pEvent );
-	void	EventEditNumberSimulatorAmplitudeChange	( HISender pSender, HKEvent pEvent );
+	void	EventEditNumberSimulatorXSpeedChange	( HISender pSender, HKEvent pEvent );
+	void	EventEditNumberSimulatorYSpeedChange	( HISender pSender, HKEvent pEvent );
 
 	// Layout configuration functions
 	void	SelectCommunicationType( int pType );
@@ -120,10 +120,10 @@ private:
 			FBLabel				mLabelNetworkProtocol;
 			FBList				mListNetworkProtocol;
 		FBButton			mButtonSimulatorEnable;
-			FBLabel				mLabelSimulatorFrequency;
-			FBEditNumber		mEditNumberSimulatorFrequency;
-			FBLabel				mLabelSimulatorAmplitude;
-			FBEditNumber		mEditNumberSimulatorAmplitude;
+			FBLabel				mLabelSimulatorXSpeed;
+			FBEditNumber		mEditNumberSimulatorXSpeed;
+			FBLabel				mLabelSimulatorYSpeed;
+			FBEditNumber		mEditNumberSimulatorYSpeed;
 
 private:
 	FBSystem			mSystem;		//!< System interface.

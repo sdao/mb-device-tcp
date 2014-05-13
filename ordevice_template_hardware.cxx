@@ -49,6 +49,11 @@
 
 #include <math.h>
 
+union BinDouble {
+    double dValue;
+    unsigned long long iValue;
+};
+
 /************************************************
  *	Constructor.
  ************************************************/
@@ -64,8 +69,8 @@ ORDevice_Template_Hardware::ORDevice_Template_Hardware()
 	mReadState			= eORReadStateHeader;
 	mDataCount			= 0;
 
-	mAmplitude			= 1.0;
-	mFrequency			= 1.0;
+	mXSpeed				= 60.0;
+	mYSpeed				= 30.0;
 
 	mRequest[0]			= BYTE_HEADER;
 	mRequest[1]			= BYTE_DATA_PACKET;
@@ -275,15 +280,29 @@ int ORDevice_Template_Hardware::FetchData()
 
 				if( lByte == lCheckSum )
 				{
+					BinDouble data[4];
+					for (int i = 0; i < 4; i++)
+					{
+						int off = i * 8;
+						data[i].iValue = ((unsigned long long)mData[off + 0] << 56  | (unsigned long long)mData[off + 1] << 48 |
+										  (unsigned long long)mData[off + 2] << 40  | (unsigned long long)mData[off + 3] << 32 |
+										  (unsigned long long)mData[off + 4] << 24  | (unsigned long long)mData[off + 5] << 16 |
+										  (unsigned long long)mData[off + 6] << 8   | (unsigned long long)mData[off + 7] << 0);
+					}
+
+					FBQuaternion quat(data[0].dValue, data[1].dValue, data[2].dValue, data[3].dValue);
+					FBVector3d rot;
+					FBQuaternionToRotation(rot, quat);
+
 					/*
 					*	Apply the data here.
 					*/
-					mPosition[0] =	(short) (mData[0]  << 8 | mData[1]  << 0);
-					mPosition[1] =	(short) (mData[2]  << 8 | mData[3]  << 0);
-					mPosition[2] =	(short) (mData[4]  << 8 | mData[5]  << 0);
-					mRotation[0] =	(short) (mData[6]  << 8 | mData[7]  << 0);
-					mRotation[1] =	(short) (mData[8]  << 8 | mData[9]  << 0);
-					mRotation[2] =	(short) (mData[10] << 8 | mData[11] << 0);
+					mPosition[0] =	0.0;
+					mPosition[1] =	0.0;
+					mPosition[2] =	0.0;
+					mRotation[0] =	rot.mValue[0];
+					mRotation[1] =	rot.mValue[1];
+					mRotation[2] =	rot.mValue[2];
 
 					mReadState = eORReadStateTrailer;
 				}
@@ -443,43 +462,47 @@ bool ORDevice_Template_Hardware::ReadData( unsigned char* pBuffer, int pSize, in
 			lSuccess = true;
 			if( pSize == MAX_BUFFER_SIZE )
 			{
-				short			lPos[3], lRot[3];
+				BinDouble		lRot[4];
 				int				i;
 				unsigned char	lCheckSum;
 				FBTime			lTime;
+				double			lSeconds;
 
 				lTime = mSystem.SystemTime;
+				lSeconds = lTime.GetSecondDouble();
+				
+				FBVector3d euler(lSeconds * mXSpeed, lSeconds * mYSpeed, 0.0);
+				FBQuaternion quat;
+				FBRotationToQuaternion(quat, euler);
 
-				lPos[0] = (short) 100*mAmplitude*sin(mFrequency*lTime.GetSecondDouble());
-				lPos[1] = (short) 100*mAmplitude*sin(mFrequency*lTime.GetSecondDouble());
-				lPos[2] = (short) 100*mAmplitude*sin(mFrequency*lTime.GetSecondDouble());
-				lRot[0] = 0;
-				lRot[1] = 0;
-				lRot[2] = 0;
+				lRot[0].dValue = quat.mValue[0];
+				lRot[1].dValue = quat.mValue[1];
+				lRot[2].dValue = quat.mValue[2];
+				lRot[3].dValue = quat.mValue[3];
 
 				pBuffer[0] = BYTE_HEADER;
 				pBuffer[1] = BYTE_DATA_PACKET;
 
-				pBuffer[2] = (unsigned char)  (lPos[0] >> 8	);
-				pBuffer[3] = (unsigned char)  (lPos[0] >> 0 );
-				pBuffer[4] = (unsigned char)  (lPos[1] >> 8 );
-				pBuffer[5] = (unsigned char)  (lPos[1] >> 0 );
-				pBuffer[6] = (unsigned char)  (lPos[2] >> 8 );
-				pBuffer[7] = (unsigned char)  (lPos[2] >> 0 );
-				pBuffer[8] = (unsigned char)  (lRot[0] >> 8 );
-				pBuffer[9] = (unsigned char)  (lRot[0] >> 0 );
-				pBuffer[10] = (unsigned char) (lRot[1] >> 8 );
-				pBuffer[11] = (unsigned char) (lRot[1] >> 0 );
-				pBuffer[12] = (unsigned char) (lRot[2] >> 8 );
-				pBuffer[13] = (unsigned char) (lRot[2] >> 0 );
+				for (int i = 0; i < 4; i++)
+				{
+					int off = i * 8;
+					pBuffer[off + 2] = (unsigned char)(lRot[i].iValue >> 56);
+					pBuffer[off + 3] = (unsigned char)(lRot[i].iValue >> 48);
+					pBuffer[off + 4] = (unsigned char)(lRot[i].iValue >> 40);
+					pBuffer[off + 5] = (unsigned char)(lRot[i].iValue >> 32);
+					pBuffer[off + 6] = (unsigned char)(lRot[i].iValue >> 24);
+					pBuffer[off + 7] = (unsigned char)(lRot[i].iValue >> 16);
+					pBuffer[off + 8] = (unsigned char)(lRot[i].iValue >> 8);
+					pBuffer[off + 9] = (unsigned char)(lRot[i].iValue >> 0);
+				}
 
 				lCheckSum = 0;
 				for( i=0; i<MAX_DATA_SIZE; i++ )
 				{
 					lCheckSum += pBuffer[2+i];
 				}
-				pBuffer[14] = lCheckSum;
-				pBuffer[15] = BYTE_TRAILER;
+				pBuffer[34] = lCheckSum;
+				pBuffer[35] = BYTE_TRAILER;
 
 				if( pNumberOfBytesRead )
 				{

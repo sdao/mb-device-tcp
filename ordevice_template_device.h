@@ -101,10 +101,10 @@ public:
 	bool		GetStreaming		()						{ return mHardware.GetStreaming();				}
 
 	//--- Aggregation of simulator parameters
-	void		SetFrequency		( double pFrequency )	{ mHardware.SetFrequency( pFrequency );			}
-	double		GetFrequency		()						{ return mHardware.GetFrequency();				}
-	void		SetAmplitude		( double pAmplitude )	{ mHardware.SetAmplitude( pAmplitude );			}
-	double		GetAmplitude		()						{ return mHardware.GetAmplitude();				}
+	void		SetXSpeed			( double pSpeed )		{ mHardware.SetXSpeed( pSpeed );			}
+	double		GetXSpeed			()						{ return mHardware.GetXSpeed();				}
+	void		SetYSpeed			( double pSpeed )		{ mHardware.SetYSpeed( pSpeed );			}
+	double		GetYSpeed			()						{ return mHardware.GetYSpeed();				}
 
 	bool		GetSetCandidate		()						{ return mSetCandidate;							}
 	void		SetSetCandidate		( bool pState )			{ mSetCandidate = pState;						}

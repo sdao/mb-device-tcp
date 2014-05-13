@@ -44,40 +44,63 @@ namespace MotionBuilderServer
             {
                 // Do work!
                 byte[] buffer = new byte[2048];
-                short[] pos = new short[3];
-                short[] rot = new short[3];
+                long[] rot = new long[4];
 
                 double seconds = (DateTime.Now - DateTime.MinValue).TotalSeconds;
                 double freq = 1.0, ampl = 1.0;
 
-                pos[0] = (short)(100 * ampl * Math.Sin(freq * seconds));
-                pos[1] = (short)(100 * ampl * Math.Sin(freq * seconds));
-                pos[2] = (short)(100 * ampl * Math.Sin(freq * seconds));
+                rot[0] = BitConverter.DoubleToInt64Bits(100 * ampl * Math.Sin(freq * seconds));
+                rot[1] = BitConverter.DoubleToInt64Bits(100 * ampl * Math.Sin(freq * seconds));
+                rot[2] = BitConverter.DoubleToInt64Bits(100 * ampl * Math.Sin(freq * seconds));
+                rot[3] = 0;
 
-                buffer[0] = OpenRealityProtocol.BYTE_HEADER;
-                buffer[1] = OpenRealityProtocol.BYTE_DATA_PACKET;
+                buffer[0] = ORProtocol.BYTE_HEADER;
+                buffer[1] = ORProtocol.BYTE_DATA_PACKET;
 
-				buffer[2] = (byte)  (pos[0] >> 8	);
-				buffer[3] = (byte)  (pos[0] >> 0 );
-				buffer[4] = (byte)  (pos[1] >> 8 );
-				buffer[5] = (byte)  (pos[1] >> 0 );
-				buffer[6] = (byte)  (pos[2] >> 8 );
-				buffer[7] = (byte)  (pos[2] >> 0 );
-				buffer[8] = (byte)  (rot[0] >> 8 );
-				buffer[9] = (byte)  (rot[0] >> 0 );
-				buffer[10] = (byte) (rot[1] >> 8 );
-				buffer[11] = (byte) (rot[1] >> 0 );
-				buffer[12] = (byte) (rot[2] >> 8 );
-				buffer[13] = (byte) (rot[2] >> 0 );
+                buffer[2] = (byte)(rot[0] >> 56);
+                buffer[3] = (byte)(rot[0] >> 48);
+                buffer[4] = (byte)(rot[0] >> 40);
+                buffer[5] = (byte)(rot[0] >> 32);
+                buffer[6] = (byte)(rot[0] >> 24);
+                buffer[7] = (byte)(rot[0] >> 16);
+                buffer[8] = (byte)(rot[0] >> 8);
+                buffer[9] = (byte)(rot[0] >> 0);
+
+                buffer[10] = (byte)(rot[1] >> 56);
+                buffer[11] = (byte)(rot[1] >> 48);
+                buffer[12] = (byte)(rot[1] >> 40);
+                buffer[13] = (byte)(rot[1] >> 32);
+                buffer[14] = (byte)(rot[1] >> 24);
+                buffer[15] = (byte)(rot[1] >> 16);
+                buffer[16] = (byte)(rot[1] >> 8);
+                buffer[17] = (byte)(rot[1] >> 0);
+
+                buffer[18] = (byte)(rot[2] >> 56);
+                buffer[19] = (byte)(rot[2] >> 48);
+                buffer[20] = (byte)(rot[2] >> 40);
+                buffer[21] = (byte)(rot[2] >> 32);
+                buffer[22] = (byte)(rot[2] >> 24);
+                buffer[23] = (byte)(rot[2] >> 16);
+                buffer[24] = (byte)(rot[2] >> 8);
+                buffer[25] = (byte)(rot[2] >> 0);
+
+                buffer[26] = (byte)(rot[3] >> 56);
+                buffer[27] = (byte)(rot[3] >> 48);
+                buffer[28] = (byte)(rot[3] >> 40);
+                buffer[29] = (byte)(rot[3] >> 32);
+                buffer[30] = (byte)(rot[3] >> 24);
+                buffer[31] = (byte)(rot[3] >> 16);
+                buffer[32] = (byte)(rot[3] >> 8);
+                buffer[33] = (byte)(rot[3] >> 0);
 
 				byte checkSum = 0;
-				for(int i = 2; i < 14; i++)
+				for(int i = 2; i < 34; i++)
 				{
 					checkSum += buffer[i];
 				}
 
-				buffer[14] = checkSum;
-                buffer[15] = OpenRealityProtocol.BYTE_TRAILER;
+				buffer[34] = checkSum;
+                buffer[35] = ORProtocol.BYTE_TRAILER;
 
                 s.Write(buffer, 0, 2048);
 

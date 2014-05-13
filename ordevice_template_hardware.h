@@ -51,7 +51,7 @@
 
 //--- Array size defines
 #define	MAX_BUFFER_SIZE		2048
-#define MAX_DATA_SIZE		12
+#define MAX_DATA_SIZE		32
 #define	MAX_INFO_SIZE		4
 #define MAX_REQUEST_SIZE	4
 
@@ -119,10 +119,10 @@ public:
 	void		EmptyBuffer			();
 
 	//--- Simulator functions
-	void		SetFrequency		( double pFrequency )	{ mFrequency = pFrequency;		}
-	double		GetFrequency		()						{ return mFrequency;			}
-	void		SetAmplitude		( double pAmplitude )	{ mAmplitude = pAmplitude;		}
-	double		GetAmplitude		()						{ return mAmplitude;			}
+	void		SetXSpeed		( double pSpeed )	{ mXSpeed = pSpeed;		}
+	double		GetXSpeed		()					{ return mXSpeed;			}
+	void		SetYSpeed		( double pSpeed )	{ mYSpeed = pSpeed;		}
+	double		GetYSpeed		()					{ return mYSpeed;			}
 
 private:
 	//--- Utility members
@@ -151,8 +151,8 @@ private:
 	double			mRotation[3];							//!< Rotation of input from hardware.
 
 	//--- Simulator values
-	double			mFrequency;								//!< Simulator frequency.
-	double			mAmplitude;								//!< Simulator amplitude.
+	double			mXSpeed;								//!< Simulator X-rotation speed.
+	double			mYSpeed;								//!< Simulator Y-rotation speed.
 
 };
 
