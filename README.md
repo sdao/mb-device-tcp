@@ -32,7 +32,7 @@ In addition, the server should indicate that MotionBuilder is connected in the c
 (Note that a Translation property exists, but it will always return 0.)
 6. Start a physical device that will stream data to the server.
 Sample software is available for Windows Phone; see the [mb-device-tcp-phone](https://github.com/sdao/mb-device-tcp-phone)
-repository for a sample Windows Phone 8.1 application that will stream the phone's orientation to the server.
+repository for a sample Windows Phone 8.1 application that will stream the phone's orientation to the server. If you don't want to use Windows Phone, there is a script `servertest.py` at the root of this repository that will open a connection to `localhost:3002` and set a single transmission indicating a <45, 69, 90> degree rotation with Euler XYZ rotation order.
 At this point, the server should indicate that the physical device/phone is connected.
 7. The device/phone should begin transmitting to MotionBuilder, and you should be able to see the
 orientation change in MotionBuilder.
